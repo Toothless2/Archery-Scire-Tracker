@@ -120,5 +120,12 @@ namespace Archery_Performance_Tracker
             this.chart.Series[sName].MarkerSize = 8;
             this.chart.Series[sName].IsVisibleInLegend = true;
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentRound = (ERound) ((ComboBox) sender).SelectedIndex;
+            
+            reloadChart(Serialization.loadScores());
+        }
     }
 }

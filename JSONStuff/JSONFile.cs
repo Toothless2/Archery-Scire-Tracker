@@ -25,6 +25,19 @@ namespace Archery_Performance_Tracker.JSONStuff
             }
         }
 
+        private void setScoreList(List<JSONScore> score, ERound r)
+        {
+            switch (r)
+            {
+                case ERound.ROUND_18M_30CM:
+                    scores18m30cm = score.OrderBy(e => e.date).ToList();
+                    break;
+                case ERound.ROUND_18M_60CM:
+                    scores18m60cm = score.OrderBy(e => e.date).ToList();
+                    break;
+            }
+        }
+
         public DateTime getOldestScore(ERound r)
         {
             return r switch
@@ -32,7 +45,7 @@ namespace Archery_Performance_Tracker.JSONStuff
                 ERound.ROUND_18M_30CM =>
                     (scores18m30cm.Count > 0 ? DateTime.FromOADate(scores18m30cm.OrderBy(e => e.date).First().date) : default),
                 ERound.ROUND_18M_60CM =>
-                    (scores18m60cm.Count > 0 ? DateTime.FromOADate(scores18m30cm.OrderBy(e => e.date).First().date) : default),
+                    (scores18m60cm.Count > 0 ? DateTime.FromOADate(scores18m60cm.OrderBy(e => e.date).First().date) : default),
                 _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
             };
         }
@@ -50,8 +63,8 @@ namespace Archery_Performance_Tracker.JSONStuff
             }
 
             round.Add(score);
-
-            round = round.OrderBy(e => e.date).ToList();
+            
+            setScoreList(round, r);
             
             return true;
         }
