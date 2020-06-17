@@ -1,16 +1,41 @@
-﻿using System;
+﻿#nullable enable
+using System;
+using System.IO;
+using System.Threading;
+using Archery_Performance_Tracker.JSONStuff;
+using Newtonsoft.Json;
 
 namespace Archery_Performance_Tracker.Utils
 {
     public static class Serialization
     {
+        private static string filePath
+        {
+            get{
+                return Environment.CurrentDirectory;
+            }
+        }
+
+        private static JSONFile data = new JSONFile();
+        private static string jsonString = "";
+        
         public static void loadScores()
         {
         }
 
-        public static void saveScores(DateTime date, int nShot, float[]? scores)
+        public static void saveScores(double date, int nShot, float[]? scores)
         {
-            
+            data.scores.Add(new JSONScore(date, nShot, scores));
+
+            new Thread(() => serializeAndSave()).Start();
         }
+        
+        private static void serializeAndSave()
+        {
+            jsonString = JsonConvert.SerializeObject(data);
+            
+            File.WriteAllText($"{filePath}\\SavedScore.json", jsonString);
+        }
+        
     }
 }

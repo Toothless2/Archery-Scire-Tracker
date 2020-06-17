@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using Archery_Performance_Tracker.Utils;
 
 namespace Archery_Performance_Tracker
 {
@@ -51,6 +52,8 @@ namespace Archery_Performance_Tracker
             chart.Series[nLowScore].Points.AddXY(d, scores[0]);
             chart.Series[nHighScore].Points.AddXY(d, scores[^1]);
             chart.Series[nMeanScore].Points.AddXY(d, Utils.Utils.calcualteMean(scores));
+            
+            Serialization.saveScores(d, nS, scores);
         }
 
         private void checkAndCreateSerises(bool scores = false)
