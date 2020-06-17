@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using Archery_Performance_Tracker.Enums;
 using Archery_Performance_Tracker.JSONStuff;
 using Archery_Performance_Tracker.Utils;
 
@@ -13,6 +14,8 @@ namespace Archery_Performance_Tracker
         private const string nLowScore = "Low Score";
         private const string nHighScore = "High Score";
         private const string nMeanScore = "Mean Score";
+
+        private ERound currentRound = ERound.ROUND_18M_30CM;
         
         public TrackerForm()
         {
@@ -31,11 +34,11 @@ namespace Archery_Performance_Tracker
         {
             if (d == null) return;
 
-            var oldest = d.getOldestScore();
+            var oldest = d.getOldestScore(currentRound);
             
             checkAndCreateSerises(oldest);
             
-            foreach (var score in d.scores)
+            foreach (var score in d.getRoundRoundScores(currentRound))
                 addScore(score.date, score.nShots, score.scores);
         }
         
@@ -53,7 +56,7 @@ namespace Archery_Performance_Tracker
             //create score/shot series if needed
             checkAndCreateSerises();
 
-            if (Serialization.saveScores(d, nS, scores) && d > Serialization.data.scores[0].date) // rebuild whole chart if new oldest value was added or and old value was updated
+            if (Serialization.saveScores(d, nS, scores, currentRound) && d > Serialization.data.getRoundRoundScores(currentRound)[0].date) // rebuild whole chart if new oldest value was added or and old value was updated
                 addScore(d, nS, scores);
             else
                 reloadChart(Serialization.data);

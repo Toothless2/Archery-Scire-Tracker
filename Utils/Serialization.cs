@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using Archery_Performance_Tracker.Enums;
 using Archery_Performance_Tracker.JSONStuff;
 using Newtonsoft.Json;
 
@@ -31,10 +32,10 @@ namespace Archery_Performance_Tracker.Utils
             return data;
         }
 
-        public static bool saveScores(double date, int nShot, float[]? scores)
+        public static bool saveScores(double date, int nShot, float[]? scores, ERound round)
         {
             //update the data correctly
-            var v = data.addNewScore(new JSONScore(date, nShot, scores));
+            var v = data.addNewScore(new JSONScore(date, nShot, scores), round);
             
             new Thread(serializeAndSave).Start();
 
