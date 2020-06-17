@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Archery_Performance_Tracker.Utils;
@@ -24,12 +18,22 @@ namespace Archery_Performance_Tracker
             InitializeComponent();
             
             //clear the chart and add teh correct series
-            this.chart.Series.Clear();
+            chart.Series.Clear();
+            loadSavedValues();
         }
 
-        private void addOldValues()
+        private void loadSavedValues()
         {
+            var d = Serialization.loadScores();
+
+            if (d == null) return;
+
+            var oldest = d.getOldestScore();
             
+            checkAndCreateSerises(oldest);
+            
+            foreach (var score in d.scores)
+                addScore(score.date, score.nShots, score.scores);
         }
         
         private void submitButton_Click(object sender, EventArgs e)
@@ -39,38 +43,46 @@ namespace Archery_Performance_Tracker
 
             float[] scores = null;
             
+            //create scores array
             if (!string.IsNullOrEmpty(textBox3.Text) && !string.IsNullOrWhiteSpace(textBox3.Text))
                 scores = Utils.Utils.convertScoresToStringScoresSorted(textBox3.Text.Split(","));
             
-            checkAndCreateSerises(scores != null);
+            //create score/shot series if needed
+            checkAndCreateSerises();
             
-            chart.Series[nArrows].Points.AddXY(d, nS);
-
-            if (scores == null) return;
-            
-            //only run if scores were added
-            chart.Series[nLowScore].Points.AddXY(d, scores[0]);
-            chart.Series[nHighScore].Points.AddXY(d, scores[^1]);
-            chart.Series[nMeanScore].Points.AddXY(d, Utils.Utils.calcualteMean(scores));
+            addScore(d, nS, scores);
             
             Serialization.saveScores(d, nS, scores);
         }
 
-        private void checkAndCreateSerises(bool scores = false)
+        private void addScore(double date, int nShots, float[] scores)
         {
-            if(chart.Series.FindByName(nArrows) == null)
-                createSeries(nArrows, new DateTime(2020, 6, 1), DateTime.Now, Color.Aquamarine);
-
-            if (!scores) return;
+            chart.Series[nArrows].Points.AddXY(date, nShots);
             
+            if (scores == null) return;
+            
+            //only run if scores were added
+            chart.Series[nLowScore].Points.AddXY(date, scores[0]);
+            chart.Series[nHighScore].Points.AddXY(date, scores[^1]);
+            chart.Series[nMeanScore].Points.AddXY(date, Utils.Utils.calcualteMean(scores));
+        }
+
+        private void checkAndCreateSerises(DateTime oldestDate = default)
+        {
+            if (oldestDate == default)
+                oldestDate = new DateTime(2020, 6, 1);
+            
+            if(chart.Series.FindByName(nArrows) == null)
+                createSeries(nArrows, oldestDate, DateTime.Now, Color.Aquamarine);
+
             if (chart.Series.FindByName(nLowScore) == null)
-                createSeries(nLowScore, new DateTime(2020, 6, 1), DateTime.Now, Color.Red);
+                createSeries(nLowScore, oldestDate, DateTime.Now, Color.Red);
                 
             if (chart.Series.FindByName(nHighScore) == null)
-                createSeries(nHighScore, new DateTime(2020, 6, 1), DateTime.Now, Color.Green);
+                createSeries(nHighScore, oldestDate, DateTime.Now, Color.Green);
                 
             if (chart.Series.FindByName(nMeanScore) == null)
-                createSeries(nMeanScore, new DateTime(2020, 6, 1), DateTime.Now, Color.Orange);
+                createSeries(nMeanScore, oldestDate, DateTime.Now, Color.Orange);
         }
 
         private void createSeries(string sName, DateTime minDate, DateTime maxDate, Color lineColour)
