@@ -11,7 +11,12 @@ namespace Archery_Performance_Tracker.Utils
     {
         private static string filePath => Environment.CurrentDirectory;
 
-        private static JSONFile data = new JSONFile();
+        public static JSONFile data
+        {
+            get;
+            private set;
+        } = new JSONFile(); // default value
+    
         private static string jsonString = "";
         
         public static JSONFile loadScores()
@@ -26,11 +31,14 @@ namespace Archery_Performance_Tracker.Utils
             return data;
         }
 
-        public static void saveScores(double date, int nShot, float[]? scores)
+        public static bool saveScores(double date, int nShot, float[]? scores)
         {
-            data.scores.Add(new JSONScore(date, nShot, scores));
+            //update the data correctly
+            var v = data.addNewScore(new JSONScore(date, nShot, scores));
+            
+            new Thread(serializeAndSave).Start();
 
-            new Thread(() => serializeAndSave()).Start();
+            return v;
         }
         
         private static void serializeAndSave()

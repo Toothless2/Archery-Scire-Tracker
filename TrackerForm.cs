@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using Archery_Performance_Tracker.JSONStuff;
 using Archery_Performance_Tracker.Utils;
 
 namespace Archery_Performance_Tracker
@@ -17,15 +18,17 @@ namespace Archery_Performance_Tracker
         {
             InitializeComponent();
             
-            //clear the chart and add teh correct series
-            chart.Series.Clear();
-            loadSavedValues();
+            reloadChart(Serialization.loadScores());
         }
 
-        private void loadSavedValues()
+        private void reloadChart(JSONFile d)
         {
-            var d = Serialization.loadScores();
-
+            chart.Series.Clear();
+            loadSavedValues(d);
+        }
+        
+        private void loadSavedValues(JSONFile d)
+        {
             if (d == null) return;
 
             var oldest = d.getOldestScore();
@@ -49,10 +52,12 @@ namespace Archery_Performance_Tracker
             
             //create score/shot series if needed
             checkAndCreateSerises();
-            
-            addScore(d, nS, scores);
-            
-            Serialization.saveScores(d, nS, scores);
+
+            if (Serialization.saveScores(d, nS, scores) && d > Serialization.data.scores[0].date) // rebuild whole chart if new oldest value was added or and old value was updated
+                addScore(d, nS, scores);
+            else
+                reloadChart(Serialization.data);
+
         }
 
         private void addScore(double date, int nShots, float[] scores)
