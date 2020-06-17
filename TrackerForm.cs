@@ -112,6 +112,9 @@ namespace Archery_Performance_Tracker
             
             this.chart.Series[sName].ChartType = SeriesChartType.Line;
             this.chart.Series[sName].Color = lineColour;
+            this.chart.Series[sName].BorderWidth = 3;
+            this.chart.Series[sName].MarkerStyle = MarkerStyle.Circle;
+            this.chart.Series[sName].MarkerSize = 8;
             this.chart.Series[sName].IsVisibleInLegend = true;
         }
     }
