@@ -22,6 +22,7 @@ namespace Archery_Performance_Tracker.JSONStuff
         private void setScoreList(List<JSONScore> score, ERound r)
         {
             scores[(int)r] = score;
+            scores[(int) r] = scores[(int) r].OrderBy(o => o.date).ToList();
         }
 
         public DateTime getOldestScore(ERound r)
@@ -44,7 +45,6 @@ namespace Archery_Performance_Tracker.JSONStuff
             }
 
             round.Add(score);
-            
             setScoreList(round, r);
             
             return true;

@@ -19,6 +19,7 @@ namespace Archery_Performance_Tracker
         private const string nMeanScore = "Mean Score";
 
         private ERound currentRound = ERound.ROUND_18M_30CM;
+        private int currentSelected = -1;
         
         public TrackerForm()
         {
@@ -63,7 +64,7 @@ namespace Archery_Performance_Tracker
             checkAndCreateSerises();
 
             if (Serialization.saveScores(d, nS, scores, currentRound) && d > Serialization.data.getRoundRoundScores(currentRound)[0].date) // rebuild whole chart if new oldest value was added or and old value was updated
-                addScore(d, nS, scores);
+                reloadChart(Serialization.data);
             else
                 reloadChart(Serialization.data);
 
@@ -130,6 +131,8 @@ namespace Archery_Performance_Tracker
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentRound = (ERound) ((ComboBox) sender).SelectedIndex;
+            currentSelected = -1;
+            pointInformation.Text = "";
             
             reloadChart(Serialization.loadScores());
         }
@@ -139,9 +142,11 @@ namespace Archery_Performance_Tracker
             var hit = chart.HitTest(((MouseEventArgs) e).X, ((MouseEventArgs) e).Y);
 
             pointInformation.Text = "";
+            currentSelected = -1;
             
             if (hit.PointIndex >= 0)
             {
+                currentSelected = hit.PointIndex;
                 var score = Serialization.getScore(currentRound, hit.PointIndex);
 
                 var sInfo = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
@@ -152,6 +157,15 @@ namespace Archery_Performance_Tracker
                              $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int)s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
 
                 pointInformation.Text = sInfo;
+            }
+        }
+
+        private void delSelect_Click(object sender, EventArgs e)
+        {
+            if (currentSelected != -1 && Serialization.deleteScore(Serialization.getScore(currentRound, currentSelected).date, currentRound))
+            {
+                currentSelected = -1;
+                reloadChart(Serialization.loadScores());
             }
         }
     }
