@@ -145,9 +145,11 @@ namespace Archery_Performance_Tracker
                 var score = Serialization.getScore(currentRound, hit.PointIndex);
 
                 var sInfo = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
-                                    $"\n\n# Shots: {score.nShots}" +
-                                    $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
-                                    $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int)s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
+                                    $"\n\n# Shots: {score.nShots}";
+                
+                if(score.scores != null && score.scores.Length > 0)
+                    sInfo += $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
+                             $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int)s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
 
                 pointInformation.Text = sInfo;
             }

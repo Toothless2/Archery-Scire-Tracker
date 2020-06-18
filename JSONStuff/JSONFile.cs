@@ -38,7 +38,7 @@ namespace Archery_Performance_Tracker.JSONStuff
             foreach (var stored in round.Where(stored => Math.Abs(stored.date - score.date) < 0.01f))
             {
                 stored.nShots = score.nShots;
-                stored.scores = stored.scores != null ? stored.scores.Concat(score.scores).OrderBy(o => o).ToArray() : score.scores; // of not null concat them
+                stored.scores = score.scores;
                 
                 return false; // false as no new item was added
             }
