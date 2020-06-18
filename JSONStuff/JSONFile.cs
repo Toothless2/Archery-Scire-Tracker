@@ -9,45 +9,26 @@ namespace Archery_Performance_Tracker.JSONStuff
 {
     public class JSONFile
     {
-        public List<JSONScore> scores18m30cm = new List<JSONScore>();
-        public List<JSONScore> scores18m60cm = new List<JSONScore>();
+        public List<JSONScore>[] scores = new List<JSONScore>[Enum.GetNames(typeof(ERound)).Length]; // creates enough rounds
 
         public ref List<JSONScore> getRoundRoundScores(ERound r)
         {
-            switch (r)
-            {
-                case ERound.ROUND_18M_30CM:
-                    return ref scores18m30cm;
-                case ERound.ROUND_18M_60CM:
-                    return ref scores18m60cm;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(r), r, null);
-            }
+            if(scores[(int)r] == null)
+                scores[(int) r] = new List<JSONScore>();
+
+            return ref scores[(int)r];
         }
 
         private void setScoreList(List<JSONScore> score, ERound r)
         {
-            switch (r)
-            {
-                case ERound.ROUND_18M_30CM:
-                    scores18m30cm = score.OrderBy(e => e.date).ToList();
-                    break;
-                case ERound.ROUND_18M_60CM:
-                    scores18m60cm = score.OrderBy(e => e.date).ToList();
-                    break;
-            }
+            scores[(int)r] = score;
         }
 
         public DateTime getOldestScore(ERound r)
         {
-            return r switch
-            {
-                ERound.ROUND_18M_30CM =>
-                    (scores18m30cm.Count > 0 ? DateTime.FromOADate(scores18m30cm.OrderBy(e => e.date).First().date) : default),
-                ERound.ROUND_18M_60CM =>
-                    (scores18m60cm.Count > 0 ? DateTime.FromOADate(scores18m60cm.OrderBy(e => e.date).First().date) : default),
-                _ => throw new ArgumentOutOfRangeException(nameof(r), r, null)
-            };
+            return scores[(int)r] != null && scores[(int) r].Count > 0
+                ? DateTime.FromOADate(scores[(int) r].OrderBy(e => e.date).First().date) // return the oldest if the list isnt empty
+                : default;
         }
 
         public bool addNewScore(JSONScore score, ERound r)
