@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Reflection.Metadata;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Archery_Performance_Tracker.Enums;
@@ -129,6 +132,25 @@ namespace Archery_Performance_Tracker
             currentRound = (ERound) ((ComboBox) sender).SelectedIndex;
             
             reloadChart(Serialization.loadScores());
+        }
+
+        private void chart_Click(object sender, EventArgs e)
+        {
+            var hit = chart.HitTest(((MouseEventArgs) e).X, ((MouseEventArgs) e).Y);
+
+            pointInformation.Text = "";
+            
+            if (hit.PointIndex >= 0)
+            {
+                var score = Serialization.getScore(currentRound, hit.PointIndex);
+
+                var sInfo = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
+                                    $"\n\n# Shots: {score.nShots}" +
+                                    $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
+                                    $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int)s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
+
+                pointInformation.Text = sInfo;
+            }
         }
     }
 }

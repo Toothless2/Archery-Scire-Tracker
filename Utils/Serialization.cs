@@ -32,6 +32,8 @@ namespace Archery_Performance_Tracker.Utils
             return data;
         }
 
+        public static JSONScore getScore(ERound r, int roundType) => data.getRoundRoundScores(r)[roundType];
+        
         public static bool saveScores(double date, int nShot, float[]? scores, ERound round)
         {
             //update the data correctly
