@@ -21,6 +21,9 @@ namespace Archery_Performance_Tracker
         {
             InitializeComponent();
             
+            comboBox1.Items.AddRange(Enums.Constatnts.ROUND_NAMES);
+            comboBox1.SelectedIndex = 0;
+            
             reloadChart(Serialization.loadScores());
         }
 
