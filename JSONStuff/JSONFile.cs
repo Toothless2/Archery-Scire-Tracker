@@ -27,6 +27,13 @@ namespace Archery_Performance_Tracker.JSONStuff
 
         public DateTime getOldestScore(ERound r)
         {
+            if (scores.Length <= (int) r)
+            {
+                var b = scores.ToList();
+                b.Add(new List<JSONScore>());
+                scores = b.ToArray();
+            }
+
             return scores[(int)r] != null && scores[(int) r].Count > 0
                 ? DateTime.FromOADate(scores[(int) r].OrderBy(e => e.date).First().date) // return the oldest if the list isnt empty
                 : default;
