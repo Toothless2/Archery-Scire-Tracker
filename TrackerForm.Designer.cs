@@ -52,7 +52,7 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(264, 8);
+            this.label1.Location = new System.Drawing.Point(12, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 23);
             this.label1.TabIndex = 1;
@@ -60,14 +60,14 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(390, 35);
+            this.textBox2.Location = new System.Drawing.Point(373, 32);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 23);
             this.textBox2.TabIndex = 4;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(390, 9);
+            this.label2.Location = new System.Drawing.Point(373, 6);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 23);
             this.label2.TabIndex = 3;
@@ -75,14 +75,14 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(496, 35);
+            this.textBox3.Location = new System.Drawing.Point(140, 32);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 23);
             this.textBox3.TabIndex = 6;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(496, 9);
+            this.label3.Location = new System.Drawing.Point(140, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 23);
             this.label3.TabIndex = 5;
@@ -90,7 +90,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(602, 9);
+            this.submitButton.Location = new System.Drawing.Point(479, 7);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(75, 48);
             this.submitButton.TabIndex = 7;
@@ -117,7 +117,7 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(264, 35);
+            this.dateTimePicker1.Location = new System.Drawing.Point(12, 32);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(119, 23);
             this.dateTimePicker1.TabIndex = 9;
@@ -125,7 +125,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 33);
+            this.comboBox1.Location = new System.Drawing.Point(246, 32);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 23);
             this.comboBox1.TabIndex = 10;
@@ -133,7 +133,7 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(12, 8);
+            this.label4.Location = new System.Drawing.Point(246, 7);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 23);
             this.label4.TabIndex = 11;

@@ -41,14 +41,18 @@ namespace Archery_Performance_Tracker
         {
             if (d == null) return;
 
-            var oldest = d.getOldestScore(currentRound);
+            var oldScore = d.getOldestScore(currentRound);
+            var oldShots = d.getOldestArrowCount();
             
-            checkAndCreateSerises(oldest);
+            checkAndCreateSerises(oldScore > oldShots ? oldShots : oldScore);
             
             foreach (var score in d.getRoundRoundScores(currentRound))
-                addScore(score.date, score.nShots, score.scores);
+                addScore(score.date, score.scores);
+
+            foreach (var s in d.shots)
+                addShot(s.date, s.shots);
         }
-        
+
         private void submitButton_Click(object sender, EventArgs e)
         {
             var d = dateTimePicker1.Value.Date.ToOADate();
@@ -63,17 +67,17 @@ namespace Archery_Performance_Tracker
             //create score/shot series if needed
             checkAndCreateSerises();
 
-            if (Serialization.saveScores(d, nS, scores, currentRound) && d > Serialization.data.getRoundRoundScores(currentRound)[0].date) // rebuild whole chart if new oldest value was added or and old value was updated
-                reloadChart(Serialization.data);
-            else
-                reloadChart(Serialization.data);
-
+            if(!string.IsNullOrEmpty(textBox3.Text))
+                Serialization.saveScores(d, scores, currentRound);
+            
+            if(!string.IsNullOrEmpty(textBox2.Text))
+                Serialization.saveShots(d, nS);
+            
+            reloadChart(Serialization.data);
         }
 
-        private void addScore(double date, int nShots, float[] scores)
+        private void addScore(double date, float[] scores)
         {
-            chart.Series[nArrows].Points.AddXY(date, nShots);
-            
             if (scores == null) return;
             
             //only run if scores were added
@@ -81,10 +85,15 @@ namespace Archery_Performance_Tracker
             chart.Series[nHighScore].Points.AddXY(date, scores[^1]);
             chart.Series[nMeanScore].Points.AddXY(date, Utils.Utils.calcualteMean(scores));
         }
+        
+        private void addShot(double sDate, int sShots)
+        {
+            chart.Series[nArrows].Points.AddXY(sDate, sShots);
+        }
 
         private void checkAndCreateSerises(DateTime oldestDate = default)
         {
-            if (oldestDate == default)
+            if (oldestDate == default || oldestDate == DateTime.Now)
                 oldestDate = new DateTime(2020, 6, 1);
             
             if(chart.Series.FindByName(nArrows) == null)
@@ -150,7 +159,7 @@ namespace Archery_Performance_Tracker
                 var score = Serialization.getScore(currentRound, hit.PointIndex);
 
                 var sInfo = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
-                                    $"\n\n# Shots: {score.nShots}";
+                                    $"\n\n# Shots: {Serialization.getShots(score.date)}";
                 
                 if(score.scores != null && score.scores.Length > 0)
                     sInfo += $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
@@ -162,8 +171,9 @@ namespace Archery_Performance_Tracker
 
         private void delSelect_Click(object sender, EventArgs e)
         {
-            if (currentSelected != -1 && Serialization.deleteScore(Serialization.getScore(currentRound, currentSelected).date, currentRound))
+            if (currentSelected != -1)
             {
+                Serialization.deletePoint(Serialization.getScore(currentRound, currentSelected).date, currentRound);
                 currentSelected = -1;
                 reloadChart(Serialization.loadScores());
             }

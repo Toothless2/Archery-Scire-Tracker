@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms.DataVisualization.Charting;
 using Archery_Performance_Tracker.Enums;
 using Archery_Performance_Tracker.JSONStuff;
 using Newtonsoft.Json;
@@ -35,28 +36,34 @@ namespace Archery_Performance_Tracker.Utils
 
         public static JSONScore getScore(ERound r, int roundType) => data.getRoundRoundScores(r)[roundType];
         
-        public static bool saveScores(double date, int nShot, float[]? scores, ERound round)
+        public static void saveShots(double date, int nShot)
+        {
+            data.addShots(date, nShot);
+            serializeAndSave();
+        }
+        
+        public static bool saveScores(double date, float[]? scores, ERound round)
         {
             //update the data correctly
-            var v = data.addNewScore(new JSONScore(date, nShot, scores), round);
+            var v = data.addNewScore(new JSONScore(date, scores), round);
             
-            new Thread(serializeAndSave).Start();
+            serializeAndSave();
 
             return v;
         }
 
-        public static bool deleteScore(double date, ERound round)
+        public static void deletePoint(double date, ERound round)
         {
             var s = data.scores[(int) round].FirstOrDefault(e => Math.Abs(e.date - date) < 0.01f);
+            var shots = data.shots.IndexOf(data.shots.FirstOrDefault(e => Math.Abs(e.date - date) < 0.01f));
 
             if (s != null)
-            {
                 data.scores[(int) round].Remove(s);
-                serializeAndSave();
-                return true;
-            }
-
-            return false;
+            
+            if(shots != -1)
+                data.shots.RemoveAt(shots);
+            
+            serializeAndSave();
         }
         
         private static void serializeAndSave()
@@ -65,6 +72,7 @@ namespace Archery_Performance_Tracker.Utils
             
             File.WriteAllText($"{filePath}\\SavedScore.json", jsonString);
         }
-        
+
+        public static int getShots(double scoreDate) => data.shots.FirstOrDefault(e => Math.Abs(e.date - scoreDate) < 0.01f).shots;
     }
 }
