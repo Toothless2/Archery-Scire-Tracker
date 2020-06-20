@@ -53,6 +53,7 @@
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(12, 5);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 23);
             this.label1.TabIndex = 1;
@@ -61,6 +62,7 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(373, 32);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 23);
             this.textBox2.TabIndex = 4;
@@ -68,6 +70,7 @@
             // label2
             // 
             this.label2.Location = new System.Drawing.Point(373, 6);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 23);
             this.label2.TabIndex = 3;
@@ -76,13 +79,15 @@
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(140, 32);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 23);
-            this.textBox3.TabIndex = 6;
+            this.textBox3.TabIndex = 2;
             // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(140, 6);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(100, 23);
             this.label3.TabIndex = 5;
@@ -91,9 +96,10 @@
             // submitButton
             // 
             this.submitButton.Location = new System.Drawing.Point(479, 7);
+            this.submitButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(75, 48);
-            this.submitButton.TabIndex = 7;
+            this.submitButton.TabIndex = 5;
             this.submitButton.Text = "Submit";
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
@@ -105,6 +111,7 @@
             legend1.Name = "Legend1";
             this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(12, 63);
+            this.chart.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.chart.Name = "chart";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
@@ -118,22 +125,25 @@
             // dateTimePicker1
             // 
             this.dateTimePicker1.Location = new System.Drawing.Point(12, 32);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(119, 23);
-            this.dateTimePicker1.TabIndex = 9;
+            this.dateTimePicker1.TabIndex = 1;
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(246, 32);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 23);
-            this.comboBox1.TabIndex = 10;
+            this.comboBox1.TabIndex = 3;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.Location = new System.Drawing.Point(246, 7);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(100, 23);
             this.label4.TabIndex = 11;
@@ -141,14 +151,16 @@
             // 
             // pointInformation
             // 
-            this.pointInformation.Location = new System.Drawing.Point(647, 213);
+            this.pointInformation.Location = new System.Drawing.Point(648, 213);
+            this.pointInformation.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.pointInformation.Name = "pointInformation";
             this.pointInformation.Size = new System.Drawing.Size(133, 276);
             this.pointInformation.TabIndex = 12;
             // 
             // delSelect
             // 
-            this.delSelect.Location = new System.Drawing.Point(647, 492);
+            this.delSelect.Location = new System.Drawing.Point(648, 492);
+            this.delSelect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.delSelect.Name = "delSelect";
             this.delSelect.Size = new System.Drawing.Size(133, 36);
             this.delSelect.TabIndex = 13;
@@ -160,7 +172,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(801, 588);
+            this.ClientSize = new System.Drawing.Size(802, 588);
             this.Controls.Add(this.delSelect);
             this.Controls.Add(this.pointInformation);
             this.Controls.Add(this.label4);
@@ -174,6 +186,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.Name = "TrackerForm";
             this.Text = "Performance Tracker";
