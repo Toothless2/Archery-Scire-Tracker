@@ -51,7 +51,7 @@ namespace Archery_Performance_Tracker
         
         private void submitButton_Click(object sender, EventArgs e)
         {
-            var d = dateTimePicker1.Value.ToOADate();
+            var d = dateTimePicker1.Value.Date.ToOADate();
             int.TryParse(textBox2.Text, out var nS);
 
             float[] scores = null;
