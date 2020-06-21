@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -152,21 +153,31 @@ namespace Archery_Performance_Tracker
 
             pointInformation.Text = "";
             currentSelected = -1;
-            
+
             if (hit.PointIndex >= 0)
             {
                 currentSelected = hit.PointIndex;
-                var score = Serialization.getScore(currentRound, hit.PointIndex);
-
-                var sInfo = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
-                                    $"\n\n# Shots: {Serialization.getShots(score.date)}";
                 
-                if(score.scores != null && score.scores.Length > 0)
-                    sInfo += $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
-                             $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int)s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
-
-                pointInformation.Text = sInfo;
+                if(hit.Series.Name.Equals($"{nArrows}"))
+                    displayShotInfo(currentSelected);
+                else
+                    displayScoreInfo(currentSelected);
             }
+        }
+
+        private void displayShotInfo(int pointIndex)
+        {
+            var shots = Serialization.getShotsFromIndex(currentSelected);
+            pointInformation.Text = $"Date: {DateTime.FromOADate(shots.date).ToShortDateString()}\n\n# Shots: {shots.shots}";
+        }
+
+        private void displayScoreInfo(int pointIndex)
+        {
+            var score = Serialization.getScore(currentRound, pointIndex);
+            
+            pointInformation.Text = $"Date: {DateTime.FromOADate(score.date).ToShortDateString()}" +
+                                    $"\n\nMean: {score.scores.Sum() / score.scores.Length}" +
+                                    $"\n\nScores: {string.Join(",", score.scores.Select(s => ((int) s).ToString())).Replace(",", $"\n{"".PadLeft(13)}")}";
         }
 
         private void delSelect_Click(object sender, EventArgs e)

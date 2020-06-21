@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
 using Archery_Performance_Tracker.Enums;
@@ -34,7 +35,11 @@ namespace Archery_Performance_Tracker.Utils
             return data;
         }
 
-        public static JSONScore getScore(ERound r, int roundType) => data.getRoundRoundScores(r)[roundType];
+        public static JSONScore getScore(ERound r, int roundType)
+        {
+            var d = data.getRoundRoundScores(r);
+            return d.Count > roundType ? d[roundType] : null;
+        }
         
         public static void saveShots(double date, int nShot)
         {
@@ -74,5 +79,13 @@ namespace Archery_Performance_Tracker.Utils
         }
 
         public static int getShots(double scoreDate) => data.shots.FirstOrDefault(e => Math.Abs(e.date - scoreDate) < 0.01f).shots;
+
+        public static (double date, int shots) getShotsFromIndex(int currentSelected)
+        {
+            if (data.shots != null && data.shots.Count > currentSelected)
+                return data.shots[currentSelected];
+            
+            return default;
+        }
     }
 }
