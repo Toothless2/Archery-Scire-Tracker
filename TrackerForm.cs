@@ -9,6 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using Archery_Performance_Tracker.Enums;
 using Archery_Performance_Tracker.JSONStuff;
 using Archery_Performance_Tracker.Utils;
+using Newtonsoft.Json.Serialization;
 
 namespace Archery_Performance_Tracker
 {
@@ -20,7 +21,8 @@ namespace Archery_Performance_Tracker
         private const string nMeanScore = "Mean Score";
 
         private ERound currentRound = ERound.ROUND_18M_30CM;
-        private int currentSelected = -1;
+        private int currentSelectedPoint = -1;
+        private string currentSelectedSerise = "";
         
         public TrackerForm()
         {
@@ -141,7 +143,7 @@ namespace Archery_Performance_Tracker
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentRound = (ERound) ((ComboBox) sender).SelectedIndex;
-            currentSelected = -1;
+            currentSelectedPoint = -1;
             pointInformation.Text = "";
             
             reloadChart(Serialization.loadScores());
@@ -152,22 +154,24 @@ namespace Archery_Performance_Tracker
             var hit = chart.HitTest(((MouseEventArgs) e).X, ((MouseEventArgs) e).Y);
 
             pointInformation.Text = "";
-            currentSelected = -1;
+            currentSelectedPoint = -1;
+            currentSelectedSerise = "";
 
             if (hit.PointIndex >= 0)
             {
-                currentSelected = hit.PointIndex;
+                currentSelectedPoint = hit.PointIndex;
+                currentSelectedSerise = hit.Series.Name;
                 
-                if(hit.Series.Name.Equals($"{nArrows}"))
-                    displayShotInfo(currentSelected);
+                if(currentSelectedSerise.Equals($"{nArrows}"))
+                    displayShotInfo(currentSelectedPoint);
                 else
-                    displayScoreInfo(currentSelected);
+                    displayScoreInfo(currentSelectedPoint);
             }
         }
 
         private void displayShotInfo(int pointIndex)
         {
-            var shots = Serialization.getShotsFromIndex(currentSelected);
+            var shots = Serialization.getShotsFromIndex(currentSelectedPoint);
             pointInformation.Text = $"Date: {DateTime.FromOADate(shots.date).ToShortDateString()}\n\n# Shots: {shots.shots}";
         }
 
@@ -182,10 +186,17 @@ namespace Archery_Performance_Tracker
 
         private void delSelect_Click(object sender, EventArgs e)
         {
-            if (currentSelected != -1)
+            if (currentSelectedPoint != -1)
             {
-                Serialization.deletePoint(Serialization.getScore(currentRound, currentSelected).date, currentRound);
-                currentSelected = -1;
+                if (currentSelectedSerise.Equals($"{nArrows}"))
+                    Serialization.deleteShot(currentSelectedPoint);
+                else
+                    Serialization.deleteScore(currentSelectedPoint, currentRound);
+                
+                currentSelectedPoint = -1;
+                currentSelectedSerise = "";
+                pointInformation.Text = "";
+                
                 reloadChart(Serialization.loadScores());
             }
         }

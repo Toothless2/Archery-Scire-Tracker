@@ -6,7 +6,7 @@ namespace Archery_Performance_Tracker.JSONStuff
     public class JSONScore
     {
         public double date;
-        public float[] scores;
+        public float[]? scores;
 
         public JSONScore(double date, float[]? scores)
         {

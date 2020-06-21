@@ -28,6 +28,8 @@ namespace Archery_Performance_Tracker.Utils
             if (!File.Exists($"{filePath}\\SavedScore.json"))
                 return null;
 
+            while (saving) { } // spin lock to prevent loading whilst saving
+
             jsonString = File.ReadAllText($"{filePath}\\SavedScore.json");
 
             data = JsonConvert.DeserializeObject<JSONFile>(jsonString);
@@ -52,30 +54,34 @@ namespace Archery_Performance_Tracker.Utils
             //update the data correctly
             var v = data.addNewScore(new JSONScore(date, scores), round);
             
-            serializeAndSave();
+            new Thread(serializeAndSave).Start();
 
             return v;
         }
 
-        public static void deletePoint(double date, ERound round)
+        public static void deleteScore(int scoreIndex, ERound round)
         {
-            var s = data.scores[(int) round].FirstOrDefault(e => Math.Abs(e.date - date) < 0.01f);
-            var shots = data.shots.IndexOf(data.shots.FirstOrDefault(e => Math.Abs(e.date - date) < 0.01f));
-
-            if (s != null)
-                data.scores[(int) round].Remove(s);
-            
-            if(shots != -1)
-                data.shots.RemoveAt(shots);
-            
-            serializeAndSave();
+            data.scores[(int) round].RemoveAt(scoreIndex);
+            new Thread(serializeAndSave).Start();
         }
-        
+
+        public static void deleteShot(int shotIndex)
+        {
+            data.shots.RemoveAt(shotIndex);
+            new Thread(serializeAndSave).Start();
+        }
+
+        private static bool saving = false;
         private static void serializeAndSave()
         {
+            while (saving) // spin lock in case something else is saving
+            { }
+
+            saving = true;
             jsonString = JsonConvert.SerializeObject(data);
-            
+
             File.WriteAllText($"{filePath}\\SavedScore.json", jsonString);
+            saving = false;
         }
 
         public static int getShots(double scoreDate) => data.shots.FirstOrDefault(e => Math.Abs(e.date - scoreDate) < 0.01f).shots;
